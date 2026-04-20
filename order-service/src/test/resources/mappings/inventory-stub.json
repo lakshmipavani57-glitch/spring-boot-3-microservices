@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/inventory",
+    "queryParameters": {
+      "skuCode": {
+        "equalTo": "pixel_8"
+      },
+      "quantity": {
+        "equalTo": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "true"
+  }
+}

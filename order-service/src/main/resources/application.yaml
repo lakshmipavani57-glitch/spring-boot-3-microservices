@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: order-service-new
+  datasource:
+    url: jdbc:mysql://localhost:3307/orderDB
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+server:
+  port: 8083
+inventory:
+    service:
+        url: http://localhost:8082
+springdoc:
+  swagger-ui: /swagger-ui.html #Swagger will be available at - http://localhost:8083/swagger-ui.html
+  api-docs:
+    path: /api-docs #Swagger API docs will be available at - http://localhost:8083/api-docs
+
+# Actuator
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: circuitbreakers,health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: order-service-new
+  tracing:
+    sampling:
+      probability: 1.0 #By default, spring boot generates traces only for 10% of the requests, setting it to 1.0 means it will generate traces for all requests, which is useful for development and debugging.
+
+#resilience4j config for circuit breaker
+resilience4j:
+  circuitbreaker:
+    instances:
+      inventory-service:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED #We can also have TIME_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50 #Out of 10 if 5 requests fail, then the circuit will open
+        waitDurationInOpenState: 5s #After 5 sec the circuit goes to haf-open state and allow 3 calls
+        permittedNumberOfCallsInHalfOpenState: 3
+        autoTransitionFromOpenToHalfOpenEnabled: true
+        minimumNumberOfCalls: 5 #Minimum number of calls before the circuit breaker can calculate the failure rate
+  timelimiter:
+    instances:
+      inventory-service:
+        timeoutDuration: 3s #means if the service does not respond within 3 sec

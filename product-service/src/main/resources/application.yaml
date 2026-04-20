@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: product-service
+  data:
+    mongodb:
+      uri: mongodb://root:password@localhost:27017/product?authSource=admin
+springdoc:
+  swagger-ui: /swagger-ui.html #Swagger will be available at - http://localhost:8081/swagger-ui.html
+  api-docs:
+    path: /api-docs #Swagger API docs will be available at - http://localhost:8081/api-docs
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: product-service
+  tracing:
+    sampling:
+      probability: 1.0 #By default, spring boot generates traces only for 10% of the requests, setting it to 1.0 means it will generate traces for all requests, which is useful for development and debugging.
+

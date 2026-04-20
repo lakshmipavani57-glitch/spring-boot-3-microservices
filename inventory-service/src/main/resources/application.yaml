@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: inventory-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3308/inventoryDB
+  jpa:
+    hibernate:
+      ddl-auto: none
+server:
+  port: 8082
+springdoc:
+  swagger-ui: /swagger-ui.html #Swagger will be available at - http://localhost:8082/swagger-ui.html
+  api-docs:
+    path: /api-docs #Swagger API docs will be available at - http://localhost:8082/api-docs
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: inventory-service
+  tracing:
+    sampling:
+      probability: 1.0 #By default, spring boot generates traces only for 10% of the requests, setting it to 1.0 means it will generate traces for all requests, which is useful for development and debugging.
+
+
+

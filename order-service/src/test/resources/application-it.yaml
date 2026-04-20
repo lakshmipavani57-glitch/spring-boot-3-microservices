@@ -1,0 +1,6 @@
+inventory:
+  service:
+    url: http://localhost:${wiremock.server.port}
+logging:
+  level:
+    com.github.tomakehurst.wiremock: DEBUG
